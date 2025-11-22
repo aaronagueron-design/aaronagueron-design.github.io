@@ -166,7 +166,7 @@ nav a:hover {
     background: #161616;
     border: 1px solid #00e676;
     border-radius: 10px;
-    width: 320px;
+    width: 300px;
     text-decoration: none;
     color: #eaffea;
     overflow: hidden;
@@ -176,7 +176,7 @@ nav a:hover {
 
 .project-card img {
     width: 100%;
-    height: 180px;
+    height: 250px;
     object-fit: cover;
 }
 
@@ -261,7 +261,7 @@ footer {
 
 .presentation-image img {
     display: block;
-    max-width: 150px;      /* taille adaptée */
+    max-width: 200px;      /* taille adaptée */
     height: auto;
     border-radius: 8px;
     box-shadow: 0 0 10px #00ff88;
