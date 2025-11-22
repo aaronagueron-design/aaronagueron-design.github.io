@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'amateur d'électronique</title>
+    <link rel="stylesheet" href="site_web_css.css">
+</head>
+<body>
+
+<header>
+    <h1>L'amateur d'électronique</h1>
+    <nav>
+        <ul>
+            <li><a href="site_web_login.html">Présentation</a></li>
+            <li><a href="projets.html">Projets</a></li>
+            <li><a href=https://www.youtube.com/@L_amateur_d_electronique>YouTube</a></li>
+        </ul>
+    </nav>
+</header>
+
+
+<!-- ----- Informations ----- -->
+<section id="projets" class="section">
+    <h2>Le robot suiveur de ligne</h2>
+    <h3>Un robot suiveur de ligne, c’est un petit robot capable de repérer une ligne tracée au sol et de la suivre en toute autonomie. Grâce à ses capteurs, il détecte le contraste entre la ligne et le sol, puis ajuste sa trajectoire en temps réel.
+    C’est un robot simple, mais parfait pour comprendre comment une machine peut “voir”, réagir et se déplacer de manière autonome. Simple en l'apparence, il y a pourtant plusieurs notions à connaître avant de réaliser ce projet. </h3>
+    <img src="robot_suiveur_video.jpg" alt="Robot suiveur de ligne" width="1320" height=auto>
+
+    <!-- ----- Les composants utilisés ----- -->
+    <h2>Les composants utilisés :</h2>
+    <h3>Pour ce projet, j'ai choisi d'utilisé le module suiveur de ligne KY-033. Le principe est simple : grâce à une LED infrarouge et à un récepteur, il est capable de repérer la différence entre une surface claire et une surface foncée. Pour que ce capteur soit efficasse, il est impératif de le calibrer. Pour cela, il vous faut tourner le potentiomètre situé au dessus du module. Pour le calibrer correctement, n'hesitez pas à faire des tests en utilisant une feuille foncée ou claire en fonction du type de détection que vous voulez réaliser afin d'affiner la calibration.
+    C’est ce qui lui permet de “voir” la ligne noire tracée au sol et d’aider le robot à garder sa trajectoire. </h3>
+    <img src="composants.jpg" alt="Robot suiveur de ligne" width="1000" height=auto>
+
+
+ <!-- ----- Le module KY-033 ----- -->
+    <h2>Le module KY-033</h2>
+    <h3>Le KY-033 envoie une lumière infrarouge vers le sol, puis mesure la quantité de lumière renvoyée :
+    Une surface claire renvoie beaucoup de lumière → le capteur voit du “blanc”.
+    Une surface foncée, comme une ligne noire, renvoie très peu de lumière → le capteur détecte la “ligne”.
+    En fonction de ce qu’il détecte, il envoie un simple signal à la carte (Arduino, ESP32, etc.) pour dire :</h3>
+    <h3>➡️ "Je suis sur la ligne" </h3>
+    <h3>ou</h3>
+    <h3>➡️ "Je ne suis plus dessus".</h3>
+    <h3>C’est ensuite grâce au programme que nous pourrons interpréter les données des capteurs et ainsi corriger la trajectoire du robot. </h3>
+    <img src="module_suiveur.jpg" alt="Robot suiveur de ligne">
+
+
+ <!-- ----- La carte arduino ----- -->
+    <h2>La carte Arduino Uno</h2>
+    <h3>L’Arduino Uno repose sur un microcontrôleur ATmega328P, chargé d’exécuter les instructions que vous lui programmez depuis l’IDE Arduino. Concrètement, c’est une petite carte capable de lire des signaux provenant de capteur et piloter des actionneurs comme des moteurs, des LEDs ou des servomoteurs.<br>
+    Elle offre ainsi une interface simple pour transformer un programme informatique en actions physiques.</h3>
+    <img src="carte_arduino.jpg" alt="Robot suiveur de ligne">
+    <h3>L’Uno met à disposition un ensemble de broches et de fonctionnalités très utiles pour le prototypage :<br>
+    <ul>
+        <li>14 broches numériques (dont 6 utilisables en PWM)</li>
+        <li>6 entrées analogiques</li>
+        <li>Un port USB Type-B pour la programmation et l’alimentation</li>
+        <li>Une entrée d’alimentation externe (7 à 12 V)</li>
+        <li>Un régulateur intégré fournissant du 5V et du 3,3V</li>
+        <li>Un oscillateur 16 MHz assurant une bonne stabilité du microcontrôleur</li>
+    </ul>
+    <h3>C'est une carte polyvalente qui permet de programmer différents composants afin de réaliser des circuits plus ou moins complexe comme des petits robots</h3>
+    </h3>
+
+
+ <!-- ----- Le pont en H ----- -->
+    <h2>Le pont en H L298N</h2>
+    <h3>Le L298N est un pont en H, il permet de contrôler des moteurs à courant continu (DC) et des moteurs pas à pas. Il permet de piloter la vitesse et le sens de rotation des moteurs à partir d’un microcontrôleur, par exemple l'arduino Uno</h3>   
+    <img src="motor_driver.jpg" alt="Robot suiveur de ligne" width="600" height=auto>
+    <h3>Le module utilise un composant L298N intégré, capable de gérer deux moteurs indépendants. Il fonctionne grâce à la logique suivante :<br>
+    Chaque moteur est contrôlé par deux entrées qui déterminent le sens de rotation. On peut contrôler la vitesse avec un signal PWM (modulation de largeur d’impulsion). <br> 
+    <h2>Câblage du circuit :</h2>
+    <img src="circuit_robot_suiveur.jpg" alt="Robot suiveur de ligne" width="800" height=auto>
+    <h3>Source: /www.raspberryme.com</h3>
+
+<!-- ----- Programmation et vidéo ----- -->
+    <h2>Vidéo du robot</h2>
+
+    <div class="project-card">
+                <!-- Robot suiveur de ligne -->
+                <a class="project-card" href="https://www.youtube.com/watch?v=fV8ln9I88u4" target="_blank">
+                    <img src="https://i.ytimg.com/vi/fV8ln9I88u4/hqdefault.jpg" alt="Robot suiveur de ligne">
+                    <h3>Robot Suiveur de Ligne</h3>
+                    <p>Voir la vidéo ➜</p>
+                </a>
+    </div>
+
+
+<!-- ----- FOOTER ----- -->
+<footer>
+    <p>© <?php echo date("Y"); ?> - L'amateur d'électronique</p>
+</footer>
+
+</body>
+
+<script>
+const scrollAmount = 120;
+
+document.querySelectorAll('.scroll-left').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const submenu = btn.nextElementSibling;
+        submenu.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+});
+
+document.querySelectorAll('.scroll-right').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const submenu = btn.previousElementSibling;
+        submenu.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+});
+</script>
+</html>
+
