@@ -5,17 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L'amateur d'électronique</title>
     <link rel="stylesheet" href="site_web_css.css">
-    <style>
-        /* Images responsives pour toute la page */
-        img {
-            width: 100%;
-            height: auto;
-            max-width: 100%;
-            display: block;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-    </style>
 </head>
 <body>
 
@@ -33,67 +22,77 @@
 <section id="projets" class="section">
     <h2>Filo : le robot filoguidé</h2>
 
-    <h3>Dans cette rubrique, nous vous parlerons du projet FILO dont son nom est tiré de la technique utilisée pour guider le robot (le filoguidage). Le but de ce projet est de créer un petit robot mobile capable de se déplacer en totale autonomie en suivant une piste tracée par un conducteur électrique. Dans notre cas, nous serons à FO = 88 kHz.</h3>
-    <img src="filo_guide.jpg" alt="Robot suiveur de ligne">
+    <h3>
+        Dans cette rubrique, nous vous parlerons du projet FILO. Le but est de créer un petit robot mobile capable de se déplacer en totale autonomie en suivant une piste tracée par un conducteur électrique.
+    </h3>
+    <img src="filo_guide.jpg" alt="Robot suiveur de ligne" class="responsive-img">
 
-    <p>FILO utilise un asservissement proportionnel pour suivre le fil au sol. Les deux bobines à l’avant comparent l’intensité du signal qu’elles captent : si le robot s’écarte d’un côté, l’écart entre les signaux augmente. Le système ajuste alors automatiquement la vitesse des moteurs pour le recentrer. Ainsi, FILO corrige sa trajectoire en temps réel et reste parfaitement aligné sur le fil.</p>
-    <img src="filo.jpg" alt="Robot suiveur de ligne">
+    <p>
+        FILO utilise un asservissement proportionnel pour suivre le fil. Les bobines à l’avant comparent le signal capté : si le robot s’écarte, le système ajuste automatiquement la vitesse des moteurs pour le recentrer.
+    </p>
+    <img src="filo.jpg" alt="Robot suiveur de ligne" class="responsive-img">
 
     <h2>Le filtrage du signal</h2>
-    <p>Pour permettre au microcontrôleur de lire correctement le signal, il est nécessaire de le lisser. L’objectif est d’obtenir une valeur stable, ou « continue », à partir d’un signal potentiellement bruité ou variable. Pour cela, nous utilisons un <strong>filtre passe-bas</strong>, qui permet d’extraire la valeur moyenne du signal.</p>
-    <img src="montage2.jpg" alt="Filtrage du signal">
+    <p>
+        Pour permettre au microcontrôleur de lire correctement le signal, nous utilisons un <strong>filtre passe-bas</strong> qui extrait la valeur moyenne du signal.
+    </p>
+    <img src="montage2.jpg" alt="Filtrage du signal" class="responsive-img">
 
     <h3>1. Définir le temps de réponse souhaité</h3>
-    <p>Le temps de réponse du système dépend directement de la fréquence de coupure du filtre. La relation entre les deux est la suivante :
-        <code>t<sub>rép</sub> = 2,2 / f<sub>c</sub></code> 
-        Nous avons choisi un temps de réponse de <strong>1 ms</strong> afin que le système soit suffisamment réactif.
+    <p>
+        La relation est <code>t<sub>rép</sub> = 2,2 / f<sub>c</sub></code>. Nous avons choisi 1 ms pour un système réactif.
     </p>
 
     <h3>2. Calculer la fréquence de coupure</h3>
     <p><code>f<sub>c</sub> = 0,35 / 1 ms = 350 Hz</code></p>
 
     <h3>3. Dimensionner le filtre RC</h3>
-    <p><code>f<sub>c</sub> = 1 / (2πRC)</code></p>
-    <p>On en déduit donc : <code>RC = 1 / (2π × f<sub>c</sub>)</code>. Il suffit ensuite de choisir une combinaison de résistance et de condensateur respectant cette valeur RC.</p>
+    <p><code>RC = 1 / (2π × f<sub>c</sub>)</code></p>
 
     <h3>4. Câbler le filtre</h3>
-    <p>Une fois les composants sélectionnés, le filtre est monté avec une résistance en série suivie d’un condensateur relié à la masse. Ce montage permet d’obtenir un signal lissé, prêt à être lu par le microcontrôleur.</p>
+    <p>
+        Le filtre est monté avec une résistance en série et un condensateur à la masse. Le signal est alors lissé.
+    </p>
 
     <h3>Signal redressé</h3>
-    <img src="signal_redresse1.jpg" alt="Signal redressé">
-    <p>En sortie de ce montage, on obtient la valeur moyenne du signal, soit (Umax/π). On va maintenant pouvoir dupliquer notre montage dans le but de réaliser l’asservissement du robot.</p>
+    <img src="signal_redresse1.jpg" alt="Signal redressé" class="responsive-img">
+    <p>On obtient la valeur moyenne du signal, soit (Umax/π).</p>
 
     <h2>Montage électronique du module capteur</h2>
-    <img src="montage1_fini.jpg" alt="Montage électronique">
-    <p>Pour étendre la capacité de détection du système, il est nécessaire de dupliquer la première partie du montage afin d’intégrer une seconde bobine. Ensuite, un amplificateur non inverseur doit être ajouté pour fournir une tension de 3,3 V. Cette amplification garantit une lecture précise des signaux provenant des bobines.</p>
+    <img src="montage1_fini.jpg" alt="Montage électronique" class="responsive-img">
+    <p>
+        Pour étendre la détection, nous dupliquons le montage et ajoutons un amplificateur non inverseur fournissant 3,3 V.
+    </p>
 
     <h2>Assemblage du robot</h2>
-    <p>Nous passons ensuite à l’assemblage des roues du robot FiLo. Dans cette étape, le schéma de câblage est présenté en détail, en expliquant comment chaque composant est connecté pour permettre le déplacement du robot.</p>
-    <img src="schema_filo_brut.jpg" alt="Schéma du robot">
-    <p>Dans cette étape, nous avons assemblé les composants nécessaires pour permettre au robot de se déplacer sur la piste.</p>
+    <p>
+        Assemblage des roues et composants du robot FiLo :
+    </p>
     <ul>
-        <li>La carte driver DRI0044-A</li>
-        <li>Le microcontrôleur MSP430G2553</li>
+        <li>Carte driver DRI0044-A</li>
+        <li>Microcontrôleur MSP430G2553</li>
         <li>Moteurs DC-DC</li>
     </ul>
-    <img src="carte_moteur.jpg" alt="Carte moteur">
+    <img src="schema_filo_brut.jpg" alt="Schéma du robot" class="responsive-img">
+    <img src="carte_moteur.jpg" alt="Carte moteur" class="responsive-img">
 
-    <h3>La carte driver DRI0044-A et le microcontrôleur fonctionnent sous une tension de 3,3 V, tandis que les moteurs sont alimentés en 5 V.</h3>
-    <p>Afin d’éviter l’utilisation de deux sources d’alimentation distinctes, nous avons intégré un convertisseur DC-DC LE33ABD, permettant de passer de 5,2 V à 3,3 V.</p>
-    <img src="transistor_mos.jpg" alt="Transistor MOS">
+    <h3>Alimentation</h3>
+    <p>
+        La carte driver et le microcontrôleur fonctionnent sous 3,3 V, les moteurs sous 5 V. Un convertisseur DC-DC LE33ABD permet de passer de 5,2 V à 3,3 V.
+    </p>
+    <img src="transistor_mos.jpg" alt="Transistor MOS" class="responsive-img">
 
     <h2>L'asservissement du robot</h2>
-    <p>Les deux bobines captent l’intensité du signal provenant du fil et déterminent si le robot est centré ou s’il dévie.</p>
-    <img src="pid.jpg" alt="Asservissement PID">
-    <p>Chaque moteur est contrôlé par deux entrées qui déterminent le sens de rotation. La vitesse est régulée par PWM.</p>
+    <p>Les bobines détectent si le robot est centré ou dévié. Chaque moteur est contrôlé via PWM.</p>
+    <img src="pid.jpg" alt="Asservissement PID" class="responsive-img">
 
     <h3>Microcontrôleur</h3>
-    <p>Le MSP430G2553 est un microcontrôleur 16 bits à très faible consommation, permettant de traiter les signaux des capteurs et commander les moteurs.</p>
-    <img src="micro_msp.jpg" alt="MSP430G2553">
+    <p>Le MSP430G2553 traite les signaux des capteurs et commande les moteurs.</p>
+    <img src="micro_msp.jpg" alt="MSP430G2553" class="responsive-img">
 
     <h3>Contrôle des moteurs</h3>
-    <p>Pour modifier la vitesse des moteurs, on utilise un signal PWM (Pulse Width Modulation).</p>
-    <img src="pwm.jpg" alt="PWM pour moteurs">
+    <p>La vitesse des moteurs est modifiée par un signal PWM.</p>
+    <img src="pwm.jpg" alt="PWM pour moteurs" class="responsive-img">
 
     <h2>Programmation du robot filoguidé</h2>
     <h3>Étape 1 : Récupération des données</h3>
@@ -109,7 +108,7 @@ analogWrite(PWM2, vitesse);</code></pre>
     <h2>Vidéo du résultat</h2>
     <div class="project-card">
         <a href="https://www.youtube.com/shorts/70cZsBATUMQ" target="_blank">
-            <img src="https://i.ytimg.com/vi/70cZsBATUMQ/oardefault.jpg?sqp=-oaymwEoCJUDENAFSFqQAgHyq4qpAxcIARUAAIhC2AEB4gEKCBgQAhgGOAFAAQ==&rs=AOn4CLBpO7WmVY22GI3imF3Ep55LEhwo1A" alt="Robot filoguidé">
+            <img src="https://i.ytimg.com/vi/70cZsBATUMQ/oardefault.jpg?sqp=-oaymwEoCJUDENAFSFqQAgHyq4qpAxcIARUAAIhC2AEB4gEKCBgQAhgGOAFAAQ==&rs=AOn4CLBpO7WmVY22GI3imF3Ep55LEhwo1A" alt="Robot filoguidé" class="responsive-img">
             <h3>Robot filoguidé</h3>
             <p>Voir la vidéo ➜</p>
         </a>
