@@ -368,4 +368,39 @@ nav ul.main-menu li a:hover {
     }
 }
 
+/* Bloc d'explication LED sur la page base_electronique*/
+.led-info-box {
+    flex: 1;
+    min-width: 250px;
+    background-color: #222;
+    color: #0f0;
+    padding: 70px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+
+/* Titre */
+.led-info-box h3 {
+    margin-top: 0;
+    color: #0f0;
+    font-size: clamp(1rem, 2vw, 1.2rem); /* Responsive */
+}
+
+/* Liste */
+.led-info-box ul {
+    padding-left: 20px; /*distance texte*/
+    margin: 0;
+    font-size: clamp(0.85rem, 1.6vw, 1rem); /* Responsive */
+    line-height: 1.4; /* gère l'espacement du texte*/
+}
+
+/* Responsive mobile : le bloc prend toute la largeur */
+@media (max-width: 600px) {
+    .led-info-box {
+        width: 100%;
+        margin-top: 15px;
+    }
+}
+
 
