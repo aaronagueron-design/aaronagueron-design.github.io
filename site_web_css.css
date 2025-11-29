@@ -265,9 +265,11 @@ footer {
 .responsive-img {
     width: 100%;
     height: auto;
-    max-width: 1200px; /* taille maximale sur écran large */
+    max-width: 900px; /* taille maximale sur écran large */
     display: block;
-    margin: auto;     /* centre l’image */
+    display: block;
+    margin-left: 0;
+    margin-right: auto;     /* centre l’image à gauche */
 }
 
 /* ===========================
@@ -402,5 +404,6 @@ nav ul.main-menu li a:hover {
         margin-top: 15px;
     }
 }
+
 
 
