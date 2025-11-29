@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bases de l'électronique</title>
+    <link rel="stylesheet" href="site_web_css.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        section {
+            margin-bottom: 50px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        input[type="number"] {
+            width: 100px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        /* LED réaliste uniquement verte, sans contour noir */
+        .led {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            vertical-align: middle;
+            background: #000; /* éteinte */
+            box-shadow: inset 0 0 5px #001100; /* léger relief même éteinte */
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Bases de l'électronique</h1>
+    <nav>
+        <ul>
+            <li><a href="page_accueil.html">Accueil</a></li>
+            <li><a href="">Calculateur</a></li>
+            <li><a href="#">Simulateurs</a></li>
+            <li><a href="#">Mini-jeu</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section id="ohm">
+    <h2>Calculateur Loi d’Ohm</h2>
+    <p>Calculez la tension, le courant ou la résistance en entrant deux valeurs :</p>
+    <label>Tension (V) : <input type="number" id="voltage" step="0.1"></label><br>
+    <label>Courant (A) : <input type="number" id="current" step="0.01"></label><br>
+    <label>Résistance (Ω) : <input type="number" id="resistance" step="0.1"></label><br>
+    <button onclick="calculateOhm()">Calculer</button>
+    <p id="ohmResult"></p>
+</section>
+
+<section id="led-simulator">
+    <h2>Simulateur de LED</h2>
+    <p>Entrez la tension et la résistance pour voir si la LED s’allume. La LED devient plus brillante en fonction du courant :</p>
+
+    <div style="display:flex; flex-wrap:wrap; gap:20px; background-color:#111; padding:20px; border-radius:8px; justify-content:center; align-items:flex-start;">
+
+        <!-- SVG Circuit -->
+        <div style="flex:2; min-width:300px;">
+            <svg id="circuitSVG" viewBox="0 0 900 200" width="100%" height="auto">
+                <defs>
+                    <!-- Motif résistance -->
+                    <pattern id="resistorPattern" width="10" height="10" patternUnits="userSpaceOnUse">
+                        <rect width="5" height="10" fill="#ccc"/>
+                        <rect x="5" width="5" height="10" fill="#888"/>
+                    </pattern>
+                    <!-- Motif fil -->
+                    <pattern id="wirePattern" width="6" height="6" patternUnits="userSpaceOnUse">
+                        <path d="M0,3 L6,3" stroke="#ccc" stroke-width="2"/>
+                    </pattern>
+                </defs>
+
+                <!-- Batterie -->
+                <rect x="0.5%" y="33%" width="3%" height="26%" fill="#555" rx="4" ry="4"/>
+                <text id="batteryLabel" x="4%" y="45%" fill="#fff" font-size="12" dominant-baseline="middle">Batterie U=5V</text>
+
+                <!-- Fils -->
+                <line x1="2%" y1="70%" x2="28%" y2="70%" stroke="url(#wirePattern)" stroke-width="4"/>
+                <line x1="32%" y1="70%" x2="57%" y2="70%" stroke="url(#wirePattern)" stroke-width="4"/>
+                <line x1="57%" y1="70%" x2="57%" y2="25%" stroke="url(#wirePattern)" stroke-width="4"/>
+                <line x1="57%" y1="25%" x2="2%" y2="25%" stroke="url(#wirePattern)" stroke-width="4"/>
+                <line x1="2%" y1="60%" x2="2%" y2="70%" stroke="url(#wirePattern)" stroke-width="4"/>
+                <line x1="2%" y1="25%" x2="2%" y2="33%" stroke="url(#wirePattern)" stroke-width="4"/>
+
+                <!-- Résistance -->
+                <rect x="28%" y="62%" width="4%" height="10%" fill="url(#resistorPattern)" rx="4" ry="4"/>
+                <!-- Anneaux dynamiques -->
+                <rect x="28%" y="62%" width="8%" height="15%" fill="url(#resistorPattern)" rx="4" ry="4"/>
+                <rect id="ring1" x="28.5%" y="62%" width="1.2%" height="15%"/>
+                <rect id="ring2" x="30%" y="62%" width="1.2%" height="15%"/>
+                <rect id="ring3" x="31.5%" y="62%" width="1.2%" height="15%"/>
+                <rect id="ring4" x="33%" y="62%" width="1.2%" height="15%"/>
+
+                <text id="resistorLabel" x="29%" y="55%" fill="#fff" font-size="12" dominant-baseline="middle">R=100Ω</text>
+
+
+                <!-- LED -->
+                <circle id="led" cx="57%" cy="50%" r="3%" fill="#000" stroke="#090" stroke-width="2"/>
+                <text x="60%" y="52%" fill="#fff" font-size="12">LED</text>
+            </svg>
+
+            <!-- Inputs -->
+            <div style="text-align:center; margin-top:15px; color:#fff;">
+                <label>Tension (V): <input type="number" id="inputVoltage" value="5" step="0.1"></label>
+                <label>Résistance (Ω): <input type="number" id="inputResistance" value="100" step="1"></label>
+                <p id="currentDisplay">Courant: 0 mA</p>
+            </div>
+        </div>
+
+        <!-- Bloc explications intégré et sombre -->
+        <div class="led-info-box">
+        <h3>Polarisation de la LED</h3>
+        <ul>
+            <li><strong>0V ou courant nul :</strong> LED éteinte, pas de conduction.</li>
+            <li><strong>Courant faible :</strong> LED faiblement allumée, couleur verte très sombre.</li>
+            <li><strong>Courant normal :</strong> LED allumée correctement, vert lumineux.</li>
+            <li><strong>Courant élevé :</strong> LED très brillante, risque de surchauffe si le courant dépasse la limite.</li>
+            <li><strong>Courant trop fort :</strong> LED grillée, devient sombre ou arrête de fonctionner.</li>
+        </ul>
+    </div>
+
+
+    </div>
+
+    <script>
+    const voltageInput = document.getElementById('inputVoltage');
+    const resistanceInput = document.getElementById('inputResistance');
+
+    const led = document.getElementById('led');
+    const currentDisplay = document.getElementById('currentDisplay');
+    const batteryLabel = document.getElementById('batteryLabel');
+    const resistorLabel = document.getElementById('resistorLabel');
+
+    const ring1 = document.getElementById('ring1');
+    const ring2 = document.getElementById('ring2');
+    const ring3 = document.getElementById('ring3');
+    const ring4 = document.getElementById('ring4');
+
+    const colorMap = ["black","brown","red","orange","yellow","green","blue","violet","grey","white"];
+
+    function updateResistorColors(R) {
+        if(R < 1) R = 1;
+        let digits = R.toString();
+        if(digits.length < 3) digits = digits.padStart(3, '0');
+
+        const d1 = parseInt(digits[0]);
+        const d2 = parseInt(digits[1]);
+        const multiplier = digits.length - 2;
+
+        ring1.setAttribute("fill", colorMap[d1] || "black");
+        ring2.setAttribute("fill", colorMap[d2] || "black");
+        ring3.setAttribute("fill", colorMap[multiplier] || "black");
+        ring4.setAttribute("fill", "gold"); // tolérance fixe
+    }
+
+    function updateLED() {
+        const V = parseFloat(voltageInput.value);
+        let R = parseFloat(resistanceInput.value);
+
+        if(R <= 0) R = 1;
+
+        const I = V / R; // courant en A
+        const mA = (I * 1000).toFixed(1);
+        currentDisplay.innerText = `Courant: ${mA} mA`;
+
+        // LED verte graduelle
+        const maxCurrent = 0.04; 
+        const brightness = Math.min(Math.sqrt(I / maxCurrent), 1);
+        const green = Math.floor(255 * brightness);
+        led.setAttribute("fill", `rgb(0,${green},0)`);
+
+        // Mettre à jour valeur batterie et résistance
+        batteryLabel.textContent = `Batterie V=${V}V`;
+        resistorLabel.textContent = `R=${R}Ω`;
+
+        // Mettre à jour anneaux de la résistance
+        updateResistorColors(R);
+    }
+
+    voltageInput.addEventListener('input', updateLED);
+    resistanceInput.addEventListener('input', updateLED);
+    updateLED();
+    </script>
+</section>
+
+
+<script>
+function updateLED() {
+    const V = parseFloat(document.getElementById("inputVoltage").value);
+    const R = parseFloat(document.getElementById("inputResistance").value);
+    const led = document.getElementById("led");
+    const display = document.getElementById("currentDisplay");
+
+    const Vf = 2; // tension seuil LED
+    const Imax = 0.02; // 20 mA
+
+    let I = (V - Vf) / R;
+    if(I < 0) I = 0;
+
+    display.innerText = `Courant: ${(I*1000).toFixed(1)} mA`;
+
+    if(I <= 0){
+        led.style.background = "#000";
+        led.style.boxShadow = "inset -2px -2px 5px #111";
+    } else {
+        const intensity = Math.min(I / Imax, 1);
+        const greenValue = Math.floor(50 + 205 * intensity);
+        led.style.background = `radial-gradient(circle at center, rgb(0, ${greenValue}, 0) 0%, #003300 70%)`;
+        led.style.boxShadow = `0 0 ${10 + 20*intensity}px rgb(0, ${greenValue}, 0),
+                               0 0 ${30 + 20*intensity}px rgba(0, ${greenValue}, 0, 0.5),
+                               inset -2px -2px 5px #004400`;
+    }
+}
+
+// Mettre à jour la LED dès qu’on change les valeurs
+document.getElementById("inputVoltage").addEventListener("input", updateLED);
+document.getElementById("inputResistance").addEventListener("input", updateLED);
+
+// Initialiser
+updateLED();
+</script>
+
+
+
+
+
+<section id="voltage-divider">
+    <h2>Simulation de diviseur de tension</h2>
+    <p>Entrez la tension d’entrée et les valeurs des résistances :</p>
+    <label>Tension d’entrée (V) : <input type="number" id="vdInput" step="0.1"></label><br>
+    <label>R1 (Ω) : <input type="number" id="vdR1" step="1"></label><br>
+    <label>R2 (Ω) : <input type="number" id="vdR2" step="1"></label><br>
+    <button onclick="simulateVoltageDivider()">Calculer</button>
+    <p id="vdResult"></p>
+</section>
+
+<section id="resistance-game">
+    <h2>Mini-jeu : Trouve la bonne valeur de résistance</h2>
+    <p>Devinez la résistance pour atteindre 10 mA avec une tension de 5 V :</p>
+    <label>Résistance (Ω) : <input type="number" id="guessResistor" step="1"></label><br>
+    <button onclick="checkResistance()">Vérifier</button>
+    <p id="gameResult"></p>
+</section>
+
+<script>
+    // --- Loi d'Ohm ---
+    function calculateOhm() {
+        let V = parseFloat(document.getElementById("voltage").value);
+        let I = parseFloat(document.getElementById("current").value);
+        let R = parseFloat(document.getElementById("resistance").value);
+        let result = "";
+
+        if (!isNaN(V) && !isNaN(I) && isNaN(R)) {
+            R = V / I;
+            result = `Résistance = ${R.toFixed(2)} Ω`;
+        } else if (!isNaN(V) && !isNaN(R) && isNaN(I)) {
+            I = V / R;
+            result = `Courant = ${I.toFixed(3)} A`;
+        } else if (!isNaN(I) && !isNaN(R) && isNaN(V)) {
+            V = I * R;
+            result = `Tension = ${V.toFixed(2)} V`;
+        } else {
+            result = "Entrez exactement deux valeurs pour calculer la troisième.";
+        }
+
+        document.getElementById("ohmResult").innerText = result;
+    }
+
+    // --- Simulateur LED ---
+    function simulateLED() {
+        const V = parseFloat(document.getElementById("ledVoltage").value);
+        const R = parseFloat(document.getElementById("ledResistor").value);
+        const led = document.getElementById("led");
+
+        const Vf = 2; // tension seuil LED
+        const IfMax = 0.02; // courant max 20 mA
+
+        const I = (V - Vf) / R;
+
+        if (I <= 0) {
+            // LED éteinte
+            led.style.background = "#000";
+            led.style.boxShadow = "inset 0 0 5px #001100";
+        } else if (I <= IfMax) {
+            // LED allumée avec dégradé radial
+            const intensity = Math.min(I / IfMax, 1);
+
+            // Couleurs du dégradé : centre clair, bord foncé
+            const centerGreen = Math.floor(150 + 105 * intensity); // 150 → 255
+            const edgeGreen = Math.floor(30 + 70 * intensity);      // 30 → 100
+
+            led.style.background = `radial-gradient(circle at center, rgb(0, ${centerGreen}, 0) 0%, rgb(0, ${edgeGreen}, 0) 70%)`;
+            led.style.boxShadow = `0 0 ${10 + 20 * intensity}px rgb(0, ${centerGreen}, 0),
+                                   0 0 ${30 + 20 * intensity}px rgba(0, ${centerGreen}, 0, 0.5)`;
+        } else {
+            // LED surchargée
+            led.style.background = "rgb(0, 100, 0)";
+            led.style.boxShadow = "0 0 20px rgb(0, 100, 0)";
+            result = "Vous avez surchargée la LED, votre rapport U/R est trop élevé, la LED à donc grillée.";
+        }
+        document.getElementById("ledResult").innerText = result;
+    }
+
+    // --- Diviseur de tension ---
+    function simulateVoltageDivider() {
+        const Vin = parseFloat(document.getElementById("vdInput").value);
+        const R1 = parseFloat(document.getElementById("vdR1").value);
+        const R2 = parseFloat(document.getElementById("vdR2").value);
+
+        if (R1 > 0 && R2 > 0) {
+            const Vout = Vin * (R2 / (R1 + R2));
+            document.getElementById("vdResult").innerText = `Tension de sortie = ${Vout.toFixed(2)} V`;
+        } else {
+            document.getElementById("vdResult").innerText = "Entrez des valeurs de résistance valides.";
+        }
+    }
+
+    // --- Mini-jeu résistance ---
+    function checkResistance() {
+        const guess = parseFloat(document.getElementById("guessResistor").value);
+        const targetR = 5 / 0.01; // R = V/I = 5V / 10mA = 500 Ω
+
+        let result = "";
+        if (guess === targetR) {
+            result = "Bravo ! Vous avez trouvé la bonne résistance !";
+        } else if (guess < targetR) {
+            result = "Trop faible, essayez une valeur plus grande.";
+        } else {
+            result = "Trop élevée, essayez une valeur plus petite.";
+        }
+
+        document.getElementById("gameResult").innerText = result;
+    }
+</script>
+
+</body>
+</html>
